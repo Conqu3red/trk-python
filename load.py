@@ -192,7 +192,7 @@ def LoadTrack(trackfile, trackname):
 		version = int.from_bytes(br.ReadByte(), byteorder)
 		#print(_bytes)
 		features = list(filter(None, ReadString(br).split(';')))
-		print(features)
+		#print(features)
 		if (version != 1):
 			raise Exception("Unsupported version")
 		redmultipier = False;
@@ -229,7 +229,8 @@ def LoadTrack(trackfile, trackname):
 		if (songinfo):
 			song = br.ReadStringSingleByteLength();
 			try:
-				print("Song found but not required to be parsed")
+				pass
+				#print("Song found but not required to be parsed")
 				#strings = song.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 			except:
 				pass
