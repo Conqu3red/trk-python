@@ -25,8 +25,33 @@ class linetype:
 		self.Blue = 1
 		self.Red = 2
 
+class trackmetadata:
+	def __init__(self):
+		self.startzoom = "STARTZOOM";
+		self.ygravity = "YGRAVITY";
+		self.xgravity = "XGRAVITY";
+		self.gravitywellsize = "GRAVITYWELLSIZE";
+		self.bgcolorR = "BGCOLORR";
+		self.bgcolorG = "BGCOLORG";
+		self.bgcolorB = "BGCOLORB";
+		self.linecolorR = "LINECOLORR";
+		self.linecolorG = "LINECOLORG";
+		self.linecolorB = "LINECOLORB";
+		self.triggers = "TRIGGERS";
+
+class triggertype:
+	def __init__(self):
+		self.Zoom = 0
+		self.BGChange = 1
+		self.LineColor = 2
+
+
 LineType = linetype()
 TrackFeatures = trackfeatures()
+TrackMetadata = trackmetadata()
+TriggerType = triggertype()
+
+
 linetriggers = []
 supported_features = [
 	"REDMULTIPLIER",
@@ -55,120 +80,97 @@ def ParseInt(f: str) -> int:
 	ret = int(f) # will raise ValueError if not a valid float
 	return ret;
 
-''' do later
+
 def ParseMetadata(ret, br):
-{
-	var count = br.ReadInt16();
-	for (int i = 0; i < count; i++)
-	{
-		var metadata = ReadString(br).Split('=');
-		switch (metadata[0])
-		{
-			case TrackMetadata.startzoom:
-				ret.StartZoom = ParseFloat(metadata[1]);
-				break;
-			case TrackMetadata.ygravity:
-				ret.YGravity = ParseFloat(metadata[1]);
-				break;
-			case TrackMetadata.xgravity:
-				ret.XGravity = ParseFloat(metadata[1]);
-				break;
-			case TrackMetadata.gravitywellsize:
-				ret.GravityWellSize = ParseDouble(metadata[1]);
-				break;
-			case TrackMetadata.bgcolorR:
-				ret.BGColorR = ParseInt(metadata[1]);
-				break;
-			case TrackMetadata.bgcolorG:
-				ret.BGColorG = ParseInt(metadata[1]);
-				break;
-			case TrackMetadata.bgcolorB:
-				ret.BGColorB = ParseInt(metadata[1]);
-				break;
-			case TrackMetadata.linecolorR:
-				ret.LineColorR = ParseInt(metadata[1]);
-				break;
-			case TrackMetadata.linecolorG:
-				ret.LineColorG = ParseInt(metadata[1]);
-				break;
-			case TrackMetadata.linecolorB:
-				ret.LineColorB = ParseInt(metadata[1]);
-				break;
-			case TrackMetadata.triggers:
-				string[] triggers = metadata[1].Split('&');
-				foreach (var t in triggers)
-				{
-					string[] tdata = t.Split(':');
-					TriggerType ttype;
-					try
-					{
-						ttype = (TriggerType)int.Parse(tdata[0]);
-					}
-					catch
-					{
-						throw new TrackIO.TrackLoadException(
-							"Unsupported trigger type");
-					}
-					GameTrigger newtrigger;
-					int start;
-					int end;
-					switch (ttype)
-					{
-						case TriggerType.Zoom:
-							var target = ParseFloat(tdata[1]);
-							start = ParseInt(tdata[2]);
-							end = ParseInt(tdata[3]);
-							newtrigger = new GameTrigger()
-							{
-								Start = start,
-								End = end,
-								TriggerType = TriggerType.Zoom,
-								ZoomTarget = target,
-							};
-							break;
-						case TriggerType.BGChange:
-							var red = ParseInt(tdata[1]);
-							var green = ParseInt(tdata[2]);
-							var blue = ParseInt(tdata[3]);
-							start = ParseInt(tdata[4]);
-							end = ParseInt(tdata[5]);
-							newtrigger = new GameTrigger()
-							{
-								Start = start,
-								End = end,
-								TriggerType = TriggerType.BGChange,
-								backgroundRed = red,
-								backgroundGreen = green,
-								backgroundBlue = blue,
-							};
-							break;
-						case TriggerType.LineColor:
-							var linered = ParseInt(tdata[1]);
-							var linegreen = ParseInt(tdata[2]);
-							var lineblue = ParseInt(tdata[3]);
-							start = ParseInt(tdata[4]);
-							end = ParseInt(tdata[5]);
-							newtrigger = new GameTrigger()
-							{
-								Start = start,
-								End = end,
-								TriggerType = TriggerType.LineColor,
-								lineRed = linered,
-								lineGreen = linegreen,
-								lineBlue = lineblue,
-							};
-							break;
-						default:
-							throw new TrackIO.TrackLoadException(
-								"Unsupported trigger type");
-					}
-					ret.Triggers.Add(newtrigger);
-				}
-				break;
-		}
-	}
-}
-'''
+	count = br.ReadInt16();
+	for i in range(count):
+		metadata = ReadString(br).split('=');
+		if metadata[0] == TrackMetadata.startzoom:
+			print(metadata[1])
+			ret.StartZoom = ParseFloat(metadata[1])
+			break;
+		if metadata[0] == TrackMetadata.ygravity:
+			ret.YGravity = ParseFloat(metadata[1]);
+			break;
+		if metadata[0] == TrackMetadata.xgravity:
+			ret.XGravity = ParseFloat(metadata[1]);
+			break;
+		if metadata[0] == TrackMetadata.gravitywellsize:
+			ret.GravityWellSize = ParseDouble(metadata[1]);
+			break;
+		if metadata[0] == TrackMetadata.bgcolorR:
+			ret.BGColorR = ParseInt(metadata[1]);
+			break;
+		if metadata[0] == TrackMetadata.bgcolorG:
+			ret.BGColorG = ParseInt(metadata[1]);
+			break;
+		if metadata[0] == TrackMetadata.bgcolorB:
+			ret.BGColorB = ParseInt(metadata[1]);
+			break;
+		if metadata[0] == TrackMetadata.linecolorR:
+			ret.LineColorR = ParseInt(metadata[1]);
+			break;
+		if metadata[0] == TrackMetadata.linecolorG:
+			ret.LineColorG = ParseInt(metadata[1]);
+			break;
+		if metadata[0] == TrackMetadata.linecolorB:
+			ret.LineColorB = ParseInt(metadata[1]);
+			break;
+		if metadata[0] == TrackMetadata.triggers:
+			triggers = metadata[1].split('&');
+			for t in triggers:
+				tdata = t.Split(':');
+				try:
+					ttype = ParseInt(tdata[0]);
+				except:
+					raise Exception(
+						"Unsupported trigger type");
+				#GameTrigger newtrigger;
+				#int start;
+				#int end;
+				if ttype == TriggerType.Zoom:
+					target = ParseFloat(tdata[1]);
+					start = ParseIntt(tdata[2]);
+					end = ParseInt(tdata[3]);
+					newtrigger = {
+						"Start2" : start,
+						"End" : end,
+						"TriggerType" : TriggerType.Zoom,
+						"ZoomTarget" : target,
+					};
+				elif ttype == TriggerType.BGChange:
+					red = ParseInt(tdata[1]);
+					green = ParseInt(tdata[2]);
+					blue = ParseInt(tdata[3]);
+					start = ParseInt(tdata[4]);
+					end = ParseInt(tdata[5]);
+					newtrigger = {
+						"Start" : start,
+						"End" : end,
+						"TriggerType" : TriggerType.BGChange,
+						"backgroundRed" : red,
+						"backgroundGreen" : green,
+						"backgroundBlue" : blue,
+					};
+				elif ttype == TriggerType.LineColor:
+					linered = ParseInt(tdata[1]);
+					linegreen = ParseInt(tdata[2]);
+					lineblue = ParseInt(tdata[3]);
+					start = ParseInt(tdata[4]);
+					end = ParseInt(tdata[5]);
+					newtrigger = {
+						"Start" : start,
+						"End" : end,
+						"TriggerType" : TriggerType.LineColor,
+						"lineRed" : linered,
+						"lineGreen" : linegreen,
+						"lineBlue" : lineblue,
+					};
+				else:
+					raise Exception(
+						"Unsupported trigger type");
+				ret.Triggers.append(newtrigger);
+	return ret
 
 def LoadTrack(trackfile, trackname):
 	linetriggers = []
@@ -231,7 +233,8 @@ def LoadTrack(trackfile, trackname):
 			try:
 				pass
 				#print("Song found but not required to be parsed")
-				#strings = song.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+				#strings = list(filter(None, song.split("\r\n")));
+				#print(strings)
 			except:
 				pass
 
@@ -313,11 +316,9 @@ def LoadTrack(trackfile, trackname):
 			meta = br.ReadBytes(4);
 			#print(meta)
 			if (meta == b"META"):
-				pass
-				#ParseMetadata(ret, br);
+				ret = ParseMetadata(ret, br);
 			else:
-				pass
-				#raise Exception("Expected metadata tag but got " + str(meta));
+				raise Exception("Expected metadata tag but got " + str(meta));
 		return ret;
 
 def ReadString(br):
