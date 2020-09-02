@@ -2,17 +2,7 @@ from binary import BinaryStream
 from vector_2d import Vector as Vector2d
 byteorder = "little"
 
-class Track:
-	def __init__(self):
-		self.YGravity = 1
-		self.XGravity = 0
-		self.GravityWellSize = 10
-		self.BGColorR = 244
-		self.BGColorG = 245
-		self.BGColorB = 249
-		self.LineColorR = 0
-		self.LineColorG = 0
-		self.LineColorB = 0
+from track import *
 
 from lr_utils import *
 
@@ -236,6 +226,8 @@ def LoadTrack(trackfile, trackname):
 					else:
 						tr = None;
 				ID = br.ReadInt32();
+				if ID > ret.current_id:
+					ret.current_id = ID
 				#print("ID:",ID)
 				if (lim != 0):
 					prvID = br.ReadInt32();# ignored
@@ -253,27 +245,24 @@ def LoadTrack(trackfile, trackname):
 				tr["LineID"] = ID;
 				linetriggers.append(tr);
 			if lt == LineType.Blue:
-				bl = {"typeName":"StandardLine","type":lt,"data":[Vector2d(x1, y1), Vector2d(x2, y2)], "inv":inv}
-				bl["ID"] = ID;
-				bl["Extension"] = lim;
-				l = bl;
+				ret.addLine(Line(lt, Vector2d(x1, y1), Vector2d(x2, y2), ID=ID, inv=inv, Extension=lim))
 			elif lt == LineType.Red:
-				rl = {"typeName":"RedLine","type":lt,"data":[Vector2d(x1, y1), Vector2d(x2, y2)], "inv":inv}
-				rl["ID"] = ID;
-				bl["Extension"] = lim;
 				if (redmultipier):
-					rl["Multiplier"] = multiplier;
-				l = rl;
+					ml = multiplier;
+				else:
+					ml = 0
+				ret.addLine(Line(lt, Vector2d(x1, y1), Vector2d(x2, y2), ID=ID, inv=inv, Extension=lim, Multiplier=ml))
 			elif lt == LineType.Scenery:
-				l = {"typeName":"SceneryLine","type":lt,"data":[Vector2d(x1, y1), Vector2d(x2, y2)],"width":linewidth}
+				ret.addLine(Line(lt, Vector2d(x1, y1), Vector2d(x2, y2), width=linewidth))
 			else:
 				raise Exception("Invalid line type at ID " + str(ID));
-			if (l["type"] == "StandardLine"):
+			#if (l["type"] == "StandardLine"):
 				#if (l["ID"] not in list(addedlines.keys())):
-				addedlines[ID] = l;
-				ret.lines.append(l);
-			else:
-				ret.lines.append(l);
+				#addedlines[ID] = l;
+				#ret.lines.append(l);
+			#else:
+				#pass
+				#ret.lines.append(l);
 			#print(l)
 		
 		ret.Triggers = linetriggers

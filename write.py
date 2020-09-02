@@ -19,13 +19,13 @@ def GetTrackFeatures(trk):
 	if (trk.frictionless):
 		ret[TrackFeatures.frictionless] = True;
 	for l in trk.lines:
-		if (l["type"] == LineType.Scenery):
-			if (Math.Abs(scenery.width - 1) > 0.0001):
+		if (l.type == LineType.Scenery):
+			if (abs(l.width - 1) > 0.0001):
 				ret[TrackFeatures.scenerywidth] = True;
-		if (l["type"] == LineType.Red):
-			if (red.Multiplier != 1):
+		if (l.type == LineType.Red):
+			if (l.Multiplier != 1):
 				ret[TrackFeatures.redmultiplier] = True;
-		if (l["type"] == LineType.Blue):
+		if (l.type == LineType.Blue):
 			pass
 			#if (l.Trigger != None)
 			#	ret[TrackFeatures.ignorable_trigger] = true;
@@ -74,15 +74,15 @@ def SaveTrack(trk, savename):
 		for line in lines:
 			#print(line)
 			l = line
-			type_ = line["type"];
-			if (l["type"] == LineType.Blue):
-				if (l["inv"]):
+			type_ = line.type;
+			if (l.type == LineType.Blue):
+				if (l.inv):
 					type_ |= 1 << 7;
-				ext = l["Extension"]
+				ext = l.Extension
 				type_ |= ((ext & 0x03) << 5); #bits: 2
 				bw.WriteBytes(bytes([type_]));
 				if (redmultiplier):
-					if (l["type"] == LineType.Red):
+					if (l.type == LineType.Red):
 						bw.WriteBytes(bytes([red.Multiplier]));
 				if (ignorable_trigger):
 					pass
@@ -99,8 +99,8 @@ def SaveTrack(trk, savename):
 					else
 						bw.Write(false);#zoomtrigger=false
 					'''
-				bw.WriteInt32(l["ID"]);
-				if (l["Extension"] != 0):
+				bw.WriteInt32(l.ID);
+				if (l.Extension != 0):
 					# this was extension writing
 					# but we no longer support this.
 					bw.WriteBytes(b'\xff\xff\xff\xff');
@@ -108,13 +108,13 @@ def SaveTrack(trk, savename):
 			else:
 				bw.Write(bytes([type_]));
 				if (scenerywidth):
-					if (line["type"] == LineType.Scenery):
-						b = bytes([(Math.Round(scenery.Width, 1) * 10)]);
+					if (line.type == LineType.Scenery):
+						b = bytes([(round(line.width, 1) * 10)]);
 						bw.Write(b);
-			bw.WriteDouble(line["data"][0].x);
-			bw.WriteDouble(line["data"][0].y);
-			bw.WriteDouble(line["data"][1].x);
-			bw.WriteDouble(line["data"][1].y);
+			bw.WriteDouble(line.point1.x);
+			bw.WriteDouble(line.point1.y);
+			bw.WriteDouble(line.point2.x);
+			bw.WriteDouble(line.point2.y);
 		bw.WriteBytes(b'META');
 		
 		metadata = []
