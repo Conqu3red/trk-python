@@ -68,10 +68,10 @@ class BinaryStream:
 	def WriteBool(self, value):
 		self.pack('?', value)
 
-	def vriteInt16(self, value):
+	def WriteInt16(self, value):
 		self.pack('h', value)
 
-	def vriteUInt16(self, value):
+	def WriteUInt16(self, value):
 		self.pack('H', value)
 
 	def WriteInt32(self, value):
@@ -86,7 +86,7 @@ class BinaryStream:
 	def WriteUInt64(self, value):
 		self.pack('Q', value)
 
-	def writeFloat(self, value):
+	def WriteFloat(self, value):
 		self.pack('f', value)
 
 	def WriteDouble(self, value):

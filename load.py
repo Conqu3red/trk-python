@@ -1,50 +1,20 @@
 from binary import BinaryStream
 from vector_2d import Vector as Vector2d
-file = "1.trk"
 byteorder = "little"
-with open(file, "rb") as f:
-	data = f.read()
 
 class Track:
 	def __init__(self):
-		pass
-class trackfeatures:
-	def __init__(self):
-		self.redmultiplier = "REDMULTIPLIER";
-		self.scenerywidth = "SCENERYWIDTH";
-		self.six_one = "6.1";
-		self.songinfo = "SONGINFO";
-		self.ignorable_trigger = "IGNORABLE_TRIGGER";
-		self.zerostart = "ZEROSTART";
-		self.remount = "REMOUNT";
-		self.frictionless = "FRICTIONLESS";
+		self.YGravity = 1
+		self.XGravity = 0
+		self.GravityWellSize = 10
+		self.BGColorR = 244
+		self.BGColorG = 245
+		self.BGColorB = 249
+		self.LineColorR = 0
+		self.LineColorG = 0
+		self.LineColorB = 0
 
-class linetype:
-	def __init__(self):
-		self.Scenery = 0
-		self.Blue = 1
-		self.Red = 2
-
-class trackmetadata:
-	def __init__(self):
-		self.startzoom = "STARTZOOM";
-		self.ygravity = "YGRAVITY";
-		self.xgravity = "XGRAVITY";
-		self.gravitywellsize = "GRAVITYWELLSIZE";
-		self.bgcolorR = "BGCOLORR";
-		self.bgcolorG = "BGCOLORG";
-		self.bgcolorB = "BGCOLORB";
-		self.linecolorR = "LINECOLORR";
-		self.linecolorG = "LINECOLORG";
-		self.linecolorB = "LINECOLORB";
-		self.triggers = "TRIGGERS";
-
-class triggertype:
-	def __init__(self):
-		self.Zoom = 0
-		self.BGChange = 1
-		self.LineColor = 2
-
+from lr_utils import *
 
 LineType = linetype()
 TrackFeatures = trackfeatures()
@@ -88,38 +58,29 @@ def ParseMetadata(ret, br):
 		if metadata[0] == TrackMetadata.startzoom:
 			print(metadata[1])
 			ret.StartZoom = ParseFloat(metadata[1])
-			break;
 		if metadata[0] == TrackMetadata.ygravity:
 			ret.YGravity = ParseFloat(metadata[1]);
-			break;
 		if metadata[0] == TrackMetadata.xgravity:
 			ret.XGravity = ParseFloat(metadata[1]);
-			break;
 		if metadata[0] == TrackMetadata.gravitywellsize:
 			ret.GravityWellSize = ParseDouble(metadata[1]);
-			break;
 		if metadata[0] == TrackMetadata.bgcolorR:
 			ret.BGColorR = ParseInt(metadata[1]);
-			break;
 		if metadata[0] == TrackMetadata.bgcolorG:
 			ret.BGColorG = ParseInt(metadata[1]);
-			break;
 		if metadata[0] == TrackMetadata.bgcolorB:
 			ret.BGColorB = ParseInt(metadata[1]);
-			break;
 		if metadata[0] == TrackMetadata.linecolorR:
 			ret.LineColorR = ParseInt(metadata[1]);
-			break;
 		if metadata[0] == TrackMetadata.linecolorG:
 			ret.LineColorG = ParseInt(metadata[1]);
-			break;
 		if metadata[0] == TrackMetadata.linecolorB:
 			ret.LineColorB = ParseInt(metadata[1]);
-			break;
 		if metadata[0] == TrackMetadata.triggers:
 			triggers = metadata[1].split('&');
+			#print(triggers)
 			for t in triggers:
-				tdata = t.Split(':');
+				tdata = t.split(':');
 				try:
 					ttype = ParseInt(tdata[0]);
 				except:
@@ -130,10 +91,10 @@ def ParseMetadata(ret, br):
 				#int end;
 				if ttype == TriggerType.Zoom:
 					target = ParseFloat(tdata[1]);
-					start = ParseIntt(tdata[2]);
+					start = ParseInt(tdata[2]);
 					end = ParseInt(tdata[3]);
 					newtrigger = {
-						"Start2" : start,
+						"Start" : start,
 						"End" : end,
 						"TriggerType" : TriggerType.Zoom,
 						"ZoomTarget" : target,
@@ -202,6 +163,9 @@ def LoadTrack(trackfile, trackname):
 		supports61 = False;
 		songinfo = False;
 		ignorabletrigger = False;
+		ret.ZeroStart = False;
+		ret.Remount = False;
+		ret.frictionless = False;
 		for i in range(len(features)):
 			if features[i] == TrackFeatures.redmultiplier:
 				redmultipier = True;
@@ -289,12 +253,12 @@ def LoadTrack(trackfile, trackname):
 				tr["LineID"] = ID;
 				linetriggers.append(tr);
 			if lt == LineType.Blue:
-				bl = {"typeName":"StandardLine","type":lt,"data":[Vector2d(x1, y1), Vector2d(x2, y2), inv]}
+				bl = {"typeName":"StandardLine","type":lt,"data":[Vector2d(x1, y1), Vector2d(x2, y2)], "inv":inv}
 				bl["ID"] = ID;
 				bl["Extension"] = lim;
 				l = bl;
 			elif lt == LineType.Red:
-				rl = {"typeName":"RedLine","type":lt,"data":[Vector2d(x1, y1), Vector2d(x2, y2), inv]}
+				rl = {"typeName":"RedLine","type":lt,"data":[Vector2d(x1, y1), Vector2d(x2, y2)], "inv":inv}
 				rl["ID"] = ID;
 				bl["Extension"] = lim;
 				if (redmultipier):
@@ -310,6 +274,7 @@ def LoadTrack(trackfile, trackname):
 				ret.lines.append(l);
 			else:
 				ret.lines.append(l);
+			#print(l)
 		
 		ret.Triggers = linetriggers
 		if (br.base_stream.tell() != len(_bytes)):
