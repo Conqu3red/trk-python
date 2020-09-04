@@ -25,12 +25,15 @@ green = [line for line in track.lines if not vars(line).get("ID")]
 
 track_ids = [line.ID for line in blue_and_red]
 #print(track_ids)
-print(f"[!] Highest Line ID is {max(track_ids)}")
+prev_max = max(track_ids)
+print(f"[!] Highest Line ID is {prev_max}")
 print(f"[#] Fixing Line IDs...")
 track_ids = fix(track_ids)
 #print(track_ids)
 print(f"[#] Fixed Line IDs!")
-print(f"[!] Highest Line ID is {max(track_ids)}")
+new_max = max(track_ids)
+print(f"[!] New Highest Line ID is {new_max}")
+print(f"[!] Highest Line ID decreased by {round((new_max/prev_max)*100)}%")
 for c in range(len(blue_and_red)):
 	blue_and_red[c].ID = track_ids[c]
 
