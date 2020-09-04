@@ -46,7 +46,7 @@ def ParseMetadata(ret, br):
 	for i in range(count):
 		metadata = ReadString(br).split('=');
 		if metadata[0] == TrackMetadata.startzoom:
-			print(metadata[1])
+			#print(metadata[1])
 			ret.StartZoom = ParseFloat(metadata[1])
 		if metadata[0] == TrackMetadata.ygravity:
 			ret.YGravity = ParseFloat(metadata[1]);

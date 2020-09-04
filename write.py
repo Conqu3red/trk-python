@@ -75,7 +75,7 @@ def SaveTrack(trk, savename):
 			#print(line)
 			l = line
 			type_ = line.type;
-			if (l.type == LineType.Blue):
+			if (l.type == LineType.Blue or l.type == LineType.Red):
 				if (l.inv):
 					type_ |= 1 << 7;
 				ext = l.Extension
@@ -83,7 +83,7 @@ def SaveTrack(trk, savename):
 				bw.WriteBytes(bytes([type_]));
 				if (redmultiplier):
 					if (l.type == LineType.Red):
-						bw.WriteBytes(bytes([red.Multiplier]));
+						bw.WriteBytes(bytes([l.Multiplier]));
 				if (ignorable_trigger):
 					pass
 					''' not required
@@ -106,11 +106,11 @@ def SaveTrack(trk, savename):
 					bw.WriteBytes(b'\xff\xff\xff\xff');
 					bw.WriteBytes(b'\xff\xff\xff\xff');
 			else:
-				bw.Write(bytes([type_]));
+				bw.WriteBytes(bytes([type_]));
 				if (scenerywidth):
-					if (line.type == LineType.Scenery):
-						b = bytes([(round(line.width, 1) * 10)]);
-						bw.Write(b);
+					if (l.type == LineType.Scenery):
+						b = bytes([int((round(l.width, 1) * 10))]);
+						bw.WriteBytes(b);
 			bw.WriteDouble(line.point1.x);
 			bw.WriteDouble(line.point1.y);
 			bw.WriteDouble(line.point2.x);

@@ -38,6 +38,7 @@ class Track:
 		self.Triggers=[]
 		self.StartZoom=4.0
 		self.current_id = 0
+		self.Triggers = []
 
 	def addLine(self, line):
 		self.lines.append(line)
