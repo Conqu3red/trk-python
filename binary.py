@@ -48,7 +48,7 @@ class BinaryStream:
 
 	def ReadString(self):
 		length = self.ReadUInt16()
-		print(length)
+		#print(length)
 		return self.unpack(str(length) + 's', length)
 
 	def ReadStringSingleByteLength(self):
