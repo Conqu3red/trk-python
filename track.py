@@ -3,10 +3,7 @@ from write import *
 from vector_2d import Vector
 from lr_utils import *
 
-LineType = linetype()
-TrackFeatures = trackfeatures()
-TrackMetadata = trackmetadata()
-TriggerType = triggertype()
+
 
 types = ["SceneryLine",
 		"StandardLine",

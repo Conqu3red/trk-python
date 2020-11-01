@@ -5,10 +5,7 @@ from lr_utils import *
 from track import *
 import random
 
-LineType = linetype()
-TrackFeatures = trackfeatures()
-TrackMetadata = trackmetadata()
-TriggerType = triggertype()
+
 
 track = Track()
 start = 5

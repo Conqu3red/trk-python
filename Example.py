@@ -9,10 +9,6 @@ from load import *
 from track import *
 from lr_utils import *
 
-LineType = linetype()
-TrackFeatures = trackfeatures()
-TrackMetadata = trackmetadata()
-TriggerType = triggertype()
 
 tk=Tk()
 trk = askopenfilename(title='Select a Linerider Track', filetypes = (("trk files","*.trk"),("all files","*.*")))
