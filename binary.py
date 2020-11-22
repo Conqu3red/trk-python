@@ -68,6 +68,9 @@ class BinaryStream:
 	def WriteBool(self, value):
 		self.pack('?', value)
 
+	def WriteUInt8(self, value):
+		self.pack('b', value)
+	
 	def WriteInt16(self, value):
 		self.pack('h', value)
 
@@ -97,6 +100,11 @@ class BinaryStream:
 		self.WriteUInt16(length)
 		self.pack(str(length) + 's', value)
 
+	def WriteStringSingleByteLength(self, value):
+		length = len(value)
+		self.WriteUInt8(length)
+		self.pack(str(length) + 's', value.encode("utf-8"))
+	
 	def pack(self, fmt, data):
 		return self.WriteBytes(pack(fmt, data))
 

@@ -13,7 +13,8 @@ linetriggers = []
 supported_features = [
 	"REDMULTIPLIER",
 	"SCENERYWIDTH",
-	"6.1","SONGINFO",
+	"6.1",
+	"SONGINFO",
 	"IGNORABLE_TRIGGER",
 	"ZEROSTART",
 ];
@@ -153,6 +154,8 @@ def LoadTrack(trackfile, trackname):
 		ret.ZeroStart = False;
 		ret.Remount = False;
 		ret.frictionless = False;
+		ret.song = ""
+		ret.song_offset = 0
 		for i in range(len(features)):
 			if features[i] == TrackFeatures.redmultiplier:
 				redmultipier = True;
@@ -183,9 +186,11 @@ def LoadTrack(trackfile, trackname):
 			song = br.ReadStringSingleByteLength();
 			try:
 				pass
-				#print("Song found but not required to be parsed")
-				#strings = list(filter(None, song.split("\r\n")));
-				#print(strings)
+				print("Song found, parsing...")
+				strings = song.split(b"\r\n")
+				ret.song = strings[0].decode("utf-8")
+				ret.song_offset = strings[1].decode("utf-8")
+				print(ret.song)
 			except:
 				pass
 

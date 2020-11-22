@@ -30,6 +30,9 @@ def GetTrackFeatures(trk):
 		ret[TrackFeatures.six_one] = True;
 	if (trk.Remount):
 		ret[TrackFeatures.remount] = True;
+	if (trk.song):
+		ret[TrackFeatures.songinfo] = True
+	
 	return ret;
 
 
@@ -62,7 +65,7 @@ def SaveTrack(trk, savename):
 		#print(featurestring)
 		WriteString(bw, featurestring);
 		if (songinfo):
-			#bw.Write(trk.Song.ToString());
+			bw.WriteStringSingleByteLength(trk.song + "\r\n" + str(trk.song_offset));
 			# Don't write song info
 			pass
 		bw.WriteDouble(trk.StartOffset.x);
