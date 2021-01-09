@@ -27,7 +27,7 @@ class Track:
 		self.lines=[]
 		self.Filename=""
 		self.Name=""
-		self.Remount=True
+		self.Remount=False
 		self.ZeroStart=False
 		self.frictionless=False
 		self.ver=62
@@ -36,6 +36,8 @@ class Track:
 		self.StartZoom=4.0
 		self.current_id = 0
 		self.Triggers = []
+        self.song = ""
+        self.song_offset = 0
 
 	def addLine(self, line):
 		self.lines.append(line)
