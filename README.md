@@ -52,3 +52,4 @@ track.Triggers : list
 # Todo
 - Add `prune()` method to `Track.Track` to prune line IDs
 - write the rest of the docs on other parts line line triggers and the `Line` object
+- Add JSON support
