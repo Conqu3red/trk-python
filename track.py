@@ -36,8 +36,8 @@ class Track:
 		self.StartZoom=4.0
 		self.current_id = 0
 		self.Triggers = []
-        self.song = ""
-        self.song_offset = 0
+		self.song = ""
+		self.song_offset = 0
 
 	def addLine(self, line):
 		self.lines.append(line)

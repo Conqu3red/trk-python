@@ -1,2 +1,3 @@
 *.trk
 __pycache__
+.vscode
