@@ -4,24 +4,24 @@
 
 # Loading Tracks
 ```python
-from load import * # track loader
-from track import * # track and line objects
-from lr_utils import * # utilities
+from lrtools.trkformat import * # trk format
+from lrtools.track import * # track and line objects
+from lrtools.utils import * # utilities
 ```
 To load a track `name.trk`:
 ```python
-track = loadTrack("track", "name.trk")
+track = load_trk("track.trk", "name")
 ```
 # Saving Tracks
 ```python
-from write import * # track writer
-from track import * # track and line objects
-from lr_utils import * # utilities
+from lrtools.trkformat import * # trk format
+from lrtools.track import * # track and line objects
+from lrtools.utils import * # utilities
 ```
 To save a track as `name.trk`:
 ```python
 track = Track()
-saveTrack(track, "name")
+save_trk(track, "name.trk")
 ```
 
 # Track Structure

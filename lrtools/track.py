@@ -1,14 +1,5 @@
-from load import *
-from write import *
-from vector_2d import Vector
-from lr_utils import *
-
-
-
-types = ["SceneryLine",
-		"StandardLine",
-		"RedLine"
-]
+from vector_2d import Vector as Vector2d
+from .utils import *
 
 class Track:
 	def __init__(self):
@@ -31,7 +22,7 @@ class Track:
 		self.ZeroStart=False
 		self.frictionless=False
 		self.ver=62
-		self.StartOffset=Vector(0.0,0.0)
+		self.StartOffset=Vector2d(0.0,0.0)
 		self.Triggers=[]
 		self.StartZoom=4.0
 		self.current_id = 0
@@ -41,7 +32,6 @@ class Track:
 
 	def addLine(self, line):
 		self.lines.append(line)
-
 
 class Line:
 	def __init__(self, ltype, point1, point2, **kwargs):

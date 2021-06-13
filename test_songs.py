@@ -1,10 +1,9 @@
-from load import *
-from write import *
-from track import *
-from lr_utils import *
+from lrtools.trkformat import *
+from lrtools.track import *
+from lrtools.utils import *
 trk = "song.trk"
-track = LoadTrack(trk, trk)
+track = load_trk(trk, trk)
 print(track.song, type(track.song))
 print(track.song_offset)
 track.song_offset = 1
-SaveTrack(track, "song_")
+save_trk(track, "song_")

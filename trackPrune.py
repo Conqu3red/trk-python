@@ -1,23 +1,24 @@
 # Conqu3red's Line ID Pruner
-from load import *
-from write import *
+from lrtools.trkformat import *
 from vector_2d import Vector
-from lr_utils import *
-from track import *
-track_name = input("Please enter track name (without .trk extension): ")
+from lrtools.utils import *
+from lrtools.track import *
+from typing import *
+import os
+track_name = input("Please enter track location: ")
 
 
-track = LoadTrack(track_name+".trk","track")
-print(f"[-] Loaded {track_name}.trk!")
+track = load_trk(track_name, "track")
+print(f"[-] Loaded {track_name}!")
 # for id in l
 # 	find all ids below id
 
-def fix(l):
+def fix(l: List[int]):
 	fixed = []
 	for c, itm in enumerate(l):
 		# find ids below itm
 		num_under = [a for a in l if a < itm]
-		fixed.append(len(num_under))
+		fixed.append(len(num_under)+1)
 	return fixed
 
 blue_and_red = [line for line in track.lines if vars(line).get("ID")]
@@ -33,12 +34,12 @@ track_ids = fix(track_ids)
 print(f"[#] Fixed Line IDs!")
 new_max = max(track_ids)
 print(f"[!] New Highest Line ID is {new_max}")
-print(f"[!] Highest Line ID decreased by {round((new_max/prev_max)*100)}%")
+print(f"[!] Highest Line ID decreased by {round(((prev_max/new_max)-1)*100)}%")
 for c in range(len(blue_and_red)):
 	blue_and_red[c].ID = track_ids[c]
 
 track.lines = blue_and_red + green
 #print(track.lines)
-SaveTrack(track, track_name)
-print(f"[-] Saved {track_name}.trk!")
+save_trk(track, track_name)
+print(f"[-] Saved {track_name}!")
 input("Press Enter to close the program...")

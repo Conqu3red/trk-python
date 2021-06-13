@@ -5,9 +5,9 @@ from decimal import *
 getcontext().prec = 100
 
 
-from load import *
-from track import *
-from lr_utils import *
+from lrtools.trkformat import *
+from lrtools.track import *
+from lrtools.utils import *
 
 
 tk=Tk()
@@ -16,7 +16,7 @@ tk.destroy()
 
 
 #track = Track()
-track = LoadTrack(trk, trk)
+track = load_trk(trk, trk)
 
 import pygame, math
 import random
