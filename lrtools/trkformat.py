@@ -124,7 +124,6 @@ def load_trk(trackfile: str, trackname: str) -> Track:
 		version = int.from_bytes(br.ReadByte(), byteorder)
 		#print(_bytes)
 		features = list(filter(None, ReadString(br).split(';')))
-		#print(features)
 		if (version != 1):
 			raise Exception("Unsupported version")
 		redmultipier = False
@@ -176,6 +175,7 @@ def load_trk(trackfile: str, trackname: str) -> Track:
 				pass
 
 		ret.StartOffset = Vector2d(br.ReadDouble(), br.ReadDouble())
+		#print(hex(br.base_stream.tell()))
 		lines = br.ReadInt32()
 		#print("Lines:",lines)
 		linetriggers = []
@@ -238,7 +238,7 @@ def load_trk(trackfile: str, trackname: str) -> Track:
 			elif lt == LineType.Scenery:
 				ret.addLine(Line(lt, Vector2d(x1, y1), Vector2d(x2, y2), width=linewidth))
 			else:
-				raise Exception("Invalid line type at ID " + str(ID))
+				raise Exception(f"Invalid line type {lt} at line ID {ID}")
 			#if (l["type"] == "StandardLine"):
 				#if (l["ID"] not in list(addedlines.keys())):
 				#addedlines[ID] = l
