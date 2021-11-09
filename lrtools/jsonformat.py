@@ -3,14 +3,20 @@ from .track import *
 from .utils import *
 import json
 
+json_LineTypeMap = {
+	0: LineType.Blue,
+	1: LineType.Red,
+	2: LineType.Scenery,
+}
+
+def get_key(dict: dict, value):
+	return list(dict.keys())[list(dict.values()).index(value)]
+
 def convert_ltype_to_trk(ltype: int) -> int:
-	if ltype == 0:
-		return LineType.Blue
-	if ltype == 1:
-		return LineType.Red
-	if ltype == 2:
-		return LineType.Scenery
-	raise ValueError(f"Invalid line type {ltype}")
+	try:
+		return json_LineTypeMap[ltype]
+	except KeyError:
+		raise ValueError(f"Invalid line type {ltype}")
 
 def load_json(filename, name="track"):
 	track = Track()
@@ -39,3 +45,60 @@ def load_json(filename, name="track"):
 			)
 		)
 	return track
+
+def save_json(trk: Track, savename: str):
+	data = {
+		"label": trk.Name,
+		"duration": 0,
+		"version": str(trk.ver / 10),
+		"audio": None,
+		"startPosition": {
+			"x": 0,
+			"y": 0
+		},
+		"riders": [
+			{
+				"startPosition": {
+					"x": trk.StartOffset.x,
+					"y": trk.StartOffset.y
+				},
+				"startVelocity": {
+					"x": 0.4,
+					"y": 0
+				}
+			}
+		],
+		"layers": [
+			{
+				"id": 0,
+				"name": "Base Layer",
+				"visible": True
+			}
+		],
+		"lines": []
+	}
+
+	for line in trk.lines:
+		line: Line
+		l = {
+			"id": 0,
+			"type": get_key(json_LineTypeMap, line.type),
+			"x1": line.point1.x,
+			"y1": line.point1.y,
+			"x2": line.point2.x,
+			"y2": line.point2.y,
+		}
+
+		if line.type == LineType.Red:
+			l["multiplier"] = line.Multiplier
+		
+		if line.type in (LineType.Blue, LineType.Red):
+			l["id"] = line.ID
+			l["flipped"] = line.inv
+			l["leftExtended"] = bool(line.Extension & 0b01)
+			l["rightExtended"] = bool(line.Extension & 0b10)
+
+		data["lines"].append(l)
+
+	with open(savename, "w") as f:
+		json.dump(data, f)

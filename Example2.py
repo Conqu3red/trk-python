@@ -1,5 +1,4 @@
 from lrtools.trkformat import *
-from lrtools.write import *
 from vector_2d import Vector
 from lrtools.utils import *
 from lrtools.track import *
