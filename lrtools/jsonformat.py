@@ -78,6 +78,8 @@ def save_json(trk: Track, savename: str):
 		"lines": []
 	}
 
+	id_set = set()
+
 	for line in trk.lines:
 		line: Line
 		l = {
@@ -94,11 +96,23 @@ def save_json(trk: Track, savename: str):
 		
 		if line.type in (LineType.Blue, LineType.Red):
 			l["id"] = line.ID
+			id_set.add(line.ID)
 			l["flipped"] = line.inv
 			l["leftExtended"] = bool(line.Extension & 0b01)
 			l["rightExtended"] = bool(line.Extension & 0b10)
 
 		data["lines"].append(l)
+	
+	# IDs for scenery lines that don't collide with the blue/red lines
+
+	i = 0
+	for l in data["lines"]:
+		if json_LineTypeMap[l["type"]] == LineType.Scenery:
+			while i in id_set:
+				i += 1
+
+			l["id"] = i
+			id_set.add(i)
 
 	with open(savename, "w") as f:
 		json.dump(data, f)
