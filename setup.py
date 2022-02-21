@@ -20,5 +20,7 @@ setuptools.setup(
     url="https://github.com/Conqu3red/trk-python",
     packages=setuptools.find_packages(),
     python_requires=">=3.6",
-    install_requires=[],
+    install_requires=[
+		"vector-2d>=1.5.2"
+	],
 )
